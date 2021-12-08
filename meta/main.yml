@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Galaxy Europe
+  description: Ansible role to deploy a configure a RabbitMQ server
+    Galaxy Server
+  company: Galaxy Europe
+  license: GPL-3.0
+  min_ansible_version: 2.11
+  role_name: usegalaxy_eu.rabbitmq
+  platforms:
+    - name: EL
+      versions:
+        - 8
+  galaxy_tags:
+    - rabbitmq
+    - amqp
+    - plugin
+dependencies: []

@@ -1,0 +1,76 @@
+---
+- name: Copy rabbitmq.conf template
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - {'src': 'rabbitmq.conf.j2', 'dest': '/home/centos/rabbitmq.conf'}
+
+- name: Start a rabbitmq container
+  community.docker.docker_container:
+    name: "{{ rabbitmq_container.name}}"
+    hostname: "{{ rabbitmq_container.hostname }}"
+    image: "{{ rabbitmq_container.image }}"
+    volumes:
+      - /home/centos/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - /etc/ssl:/etc/ssl:ro
+      - /etc/pki:/etc/pki:ro
+    ports:
+      - 15672:15672
+      - 5671:5671
+
+- name: Pause for 10 seconds to give time to the container to come up
+  pause:
+    seconds: 10
+
+- name: collect vhosts
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: rabbitmqctl list_vhosts
+  register: list_vhosts
+
+- name: collect users
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: rabbitmqctl list_users
+  register: list_users
+
+- name: Remove guest user
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: rabbitmqctl delete_user 'guest'
+  when: "'guest' in list_users.stdout"
+
+- name: Create vhosts
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: "rabbitmqctl add_vhost {{ item.vhost }}"
+  loop: "{{ rabbitmq_users }}"
+  when: "item.vhost not in list_vhosts.stdout"
+
+- name: Create users
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: 'rabbitmqctl add_user "{{ item.user }}" "{{ item.password }}"'
+  loop: "{{ rabbitmq_users }}"
+  when: "item.user not in list_users.stdout"
+
+- name: Set permission on users
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: 'rabbitmqctl set_permissions -p "{{ item.vhost }}" "{{ item.user }}" ".*" ".*" ".*"'
+  loop: "{{ rabbitmq_users }}"
+  when: "item.user not in list_users.stdout"
+
+- name: Set tags on user
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: 'rabbitmqctl set_user_tags "{{ item.user }}" ""{{ item.tags }}'
+  loop: "{{ rabbitmq_users }}"
+  when: "item.tags is defined"
+
+- name: Enable plugins
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name}}"
+    command: "rabbitmq-plugins enable {{ item }}"
+  loop: "{{ rabbitmq_plugins }}"
