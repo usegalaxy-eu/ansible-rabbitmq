@@ -35,4 +35,4 @@
   roles:
     - geerlingguy.docker
     - galaxyproject.nginx
-    - usegalaxy-eu.rabbitmqserver
+    - usegalaxy_eu.rabbitmqserver
