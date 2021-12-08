@@ -22,7 +22,7 @@ Together with roles:
 
 this role allows you to deploy an encrypted RabbitMQ server
 
-See [plabook_example](playbook_example) for details
+See [playbook_example](playbook_example) for details
      
 License
 -------
