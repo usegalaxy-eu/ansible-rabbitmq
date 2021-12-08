@@ -1,4 +1,4 @@
-usegalaxy_eu.rabbitmq
+usegalaxy_eu.rabbitmqserver
 =======
 Ansible role to deploy a configure a RabbitMQ server.
 It is possible to create users, administrator or regular one, virtual hosts and bind them together.
