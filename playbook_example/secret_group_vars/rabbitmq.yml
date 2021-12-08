@@ -1,0 +1,5 @@
+---
+# this file should be encrypted with ansible-vault
+rabbitmq_users_password:
+  mqadmin: mqadmin
+  galaxy: galaxy

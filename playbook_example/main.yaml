@@ -1,0 +1,38 @@
+---
+- name: RabbitMQServer
+  hosts: rabbitmq
+  become: true
+  become_user: root
+  vars:
+    hostname: 0d5688d7-9601-42c0-ac7f-16167233fa8c.fr.bw-cloud-instance.org
+  vars_files:
+    - secret_group_vars/rabbitmq.yml
+  pre_tasks:
+    - name: Install dependencies
+      ansible.builtin.dnf:
+        state: latest
+        name:
+          - python3-pip
+          - python3-virtualenv
+    - name: Configure SELinux
+      ansible.posix.seboolean:
+        name: "{{ item }}"
+        state: true
+        persistent: true
+      loop:
+        - httpd_can_network_connect
+
+  post_tasks:
+    - name: Install docker pip package
+      pip:
+        name: docker
+    - name: Add Centos user to the docker group
+      user:
+        name: centos
+        groups: docker
+        append: true
+
+  roles:
+    - geerlingguy.docker
+    - galaxyproject.nginx
+    - usegalaxy-eu.rabbitmqserver
