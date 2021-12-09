@@ -4,7 +4,7 @@
   become: true
   become_user: root
   vars:
-    hostname: 0d5688d7-9601-42c0-ac7f-16167233fa8c.fr.bw-cloud-instance.org
+    hostname: cafbc041-a235-48cd-82f2-dcfcf9be2940.fr.bw-cloud-instance.org
   vars_files:
     - secret_group_vars/rabbitmq.yml
   pre_tasks:
@@ -21,18 +21,15 @@
         persistent: true
       loop:
         - httpd_can_network_connect
-
-  post_tasks:
     - name: Install docker pip package
-      pip:
+      ansible.builtin.pip:
         name: docker
-    - name: Add Centos user to the docker group
-      user:
-        name: centos
-        groups: docker
-        append: true
 
   roles:
+    - role: usegalaxy_eu.handy.os_setup
+      vars:
+        enable_remap_user: true
+    - create_rabbitmq_user
     - geerlingguy.docker
     - galaxyproject.nginx
     - usegalaxy_eu.rabbitmqserver

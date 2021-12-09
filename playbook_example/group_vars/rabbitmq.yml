@@ -11,6 +11,11 @@ certbot_post_renewal: |
     systemctl restart rabbitmq-server || true
 certbot_virtualenv_package_name: python3-virtualenv
 certbot_virtualenv_command: virtualenv-3
+certbot_environment: "staging" # change to production when ready to go
+
+# Docker
+docker_users:
+  - centos
 
 # NGINX
 nginx_enable_default_server: false
