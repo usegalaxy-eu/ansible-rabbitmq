@@ -6,6 +6,8 @@ Will be exposed the following ports:
 * 5671: used by AMQP 0-9-1 and AMQP 1.0 clients with TLS
 * 15672: HTTP API clients, management UI and rabbitmqadmin
 
+RabbitMQ runs into a docker container
+
 Requirements
 ------------
 Ansible >= 2.11
