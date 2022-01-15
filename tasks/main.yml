@@ -41,6 +41,7 @@
     container: "{{ rabbitmq_container.name }}"
     command: rabbitmqctl delete_user 'guest'
   when: "'guest' in list_users.stdout"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Create vhosts
   community.docker.docker_container_exec:
@@ -48,6 +49,7 @@
     command: "rabbitmqctl add_vhost {{ item.vhost }}"
   loop: "{{ rabbitmq_users }}"
   when: "item.vhost not in list_vhosts.stdout"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Create users
   community.docker.docker_container_exec:
@@ -55,6 +57,7 @@
     command: 'rabbitmqctl add_user "{{ item.user }}" "{{ item.password }}"'
   loop: "{{ rabbitmq_users }}"
   when: "item.user not in list_users.stdout"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set permission on users
   community.docker.docker_container_exec:
@@ -62,6 +65,7 @@
     command: 'rabbitmqctl set_permissions -p "{{ item.vhost }}" "{{ item.user }}" ".*" ".*" ".*"'
   loop: "{{ rabbitmq_users }}"
   when: "item.user not in list_users.stdout"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set tags on user
   community.docker.docker_container_exec:
@@ -69,6 +73,7 @@
     command: 'rabbitmqctl set_user_tags "{{ item.user }}" ""{{ item.tags }}'
   loop: "{{ rabbitmq_users }}"
   when: "item.tags is defined"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Enable plugins
   community.docker.docker_container_exec:
