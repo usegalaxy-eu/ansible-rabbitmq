@@ -3,8 +3,6 @@
   hosts: rabbitmq
   become: true
   become_user: root
-  vars:
-    hostname: cafbc041-a235-48cd-82f2-dcfcf9be2940.fr.bw-cloud-instance.org
   vars_files:
     - secret_group_vars/rabbitmq.yml
   pre_tasks:
