@@ -16,3 +16,5 @@ Before to run this playbook, you have to update some variables in [group_vars/ra
 * __hostname__ - replace here your node's fqdn
 * __certbot_admin_email__ -replace here your email
 * __certbot_environment__: change to production when everything is ready to go
+
+The RabbitMQ administration interface will be exposed at https://your_node_fqdn/rabbit
