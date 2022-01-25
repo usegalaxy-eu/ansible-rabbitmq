@@ -1,4 +1,7 @@
 ---
+# Change this to set your predefined erlang cookie
+rabbitmq_predefined_erlang_cookie: itsasecret
+
 # add here users and vhost
 rabbitmq_users:
   - user: mqadmin
