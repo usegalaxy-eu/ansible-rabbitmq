@@ -31,4 +31,4 @@ rabbitmq_config:
 rabbitmq_container:
   name: rabbit_hole
   image: rabbitmq:3.9.11
-  hostname: rabbithole
+  hostname: "{{ inventory_hostname }}"
