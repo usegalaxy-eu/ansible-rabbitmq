@@ -28,7 +28,41 @@ rabbitmq_config:
     verify: verify_peer
     fail_if_no_peer_cert: 'false'
 
+# Specify here if it will be a standalone server or being a part of cluster
+# possible values: standalone, cluster
+rabbitmq_setup: standalone
+
+rabbitmq_cluster_name: cluster1
+# Add here cluster members in the form rabbit@f.q.d.n.
+rabbitmq_cluster_members: []
+
+# Docker cantainer
 rabbitmq_container:
   name: rabbit_hole
   image: rabbitmq:3.9.11
   hostname: "{{ inventory_hostname }}"
+
+rabbitmq_container_pause: 20
+
+rabbitmq_container_standalone_setup_details:
+  volumes:
+    - /home/centos/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    - /home/centos/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+    - /etc/ssl:/etc/ssl:ro
+    - /etc/pki:/etc/pki:ro
+  ports:
+    - 15672:15672
+    - 5671:5671
+
+rabbitmq_container_cluster_setup_details:
+  volumes:
+    - /home/centos/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    - /home/centos/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+    - /etc/ssl:/etc/ssl:ro
+    - /etc/pki:/etc/pki:ro
+  ports:
+    - 15672:15672
+    - 5671:5671
+    - 4369:4369
+    - 25672:25672
+  env: {'RABBITMQ_USE_LONGNAME': 'true'}
