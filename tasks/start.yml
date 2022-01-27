@@ -18,6 +18,8 @@
     name: "{{ rabbitmq_container.name }}"
     hostname: "{{ rabbitmq_container.hostname }}"
     image: "{{ rabbitmq_container.image }}"
+    state: started
+    restart_policy: always
     volumes: "{{ rabbitmq_container_volumes }}"
     ports: "{{ rabbitmq_container_ports }}"
     env: "{{ rabbitmq_container_env }}"
