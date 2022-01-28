@@ -1,8 +1,7 @@
 ---
 galaxy_info:
   author: Galaxy Europe
-  description: Ansible role to deploy a configure a RabbitMQ server
-    Galaxy Server
+  description: Ansible role to deploy and configure a RabbitMQ server
   company: Galaxy Europe
   license: GPL-3.0
   min_ansible_version: 2.11
@@ -11,8 +10,15 @@ galaxy_info:
     - name: EL
       versions:
         - 8
+    - name: Ubuntu
+      versions:
+        - focal
+    - name: Debian
+      versions:
+        - 11
   galaxy_tags:
     - rabbitmq
     - amqp
     - plugin
+    - cluster
 dependencies: []
