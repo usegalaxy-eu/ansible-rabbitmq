@@ -38,11 +38,6 @@
   register: check_group
   changed_when: false
 
-- name: Print return information from the previous task
-  ansible.builtin.debug:
-    var: check_group
-  when: debug
-
 - name: Replace in group file
   ansible.builtin.lineinfile:
     path: /etc/group
@@ -62,11 +57,6 @@
   ignore_errors: true
   register: check_user
   changed_when: false
-
-- name: Print return information from the previous task2
-  ansible.builtin.debug:
-    var: check_user
-  when: debug
 
 - name: Replace in passwd file
   ansible.builtin.lineinfile:
