@@ -1,4 +1,7 @@
 ---
+# Destination path
+rabbitmq_path: /opt/rabbitmq
+
 # Change this to set your predefined erlang cookie
 rabbitmq_predefined_erlang_cookie: itsasecret
 
@@ -46,8 +49,8 @@ rabbitmq_container_pause: 20
 
 rabbitmq_container_standalone_setup_details:
   volumes:
-    - /home/centos/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-    - /home/centos/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+    - "{{ rabbitmq_path }}/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"
+    - "{{ rabbitmq_path }}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     - /etc/ssl:/etc/ssl:ro
     - /etc/pki:/etc/pki:ro
   ports:
@@ -56,8 +59,8 @@ rabbitmq_container_standalone_setup_details:
 
 rabbitmq_container_cluster_setup_details:
   volumes:
-    - /home/centos/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-    - /home/centos/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+    - "{{ rabbitmq_path }}/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"
+    - "{{ rabbitmq_path }}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     - /etc/ssl:/etc/ssl:ro
     - /etc/pki:/etc/pki:ro
   ports:
