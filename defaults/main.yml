@@ -20,6 +20,7 @@ rabbitmq_plugins:
   - rabbitmq_management
 
 rabbitmq_config:
+  consumer_timeout: 3600000 # one hour in milliseconds
   listeners:
     tcp: none
   ssl_listeners:
