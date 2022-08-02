@@ -29,3 +29,4 @@
   loop:
     - {'src': 'rabbitmq.conf.j2', 'dest': "{{ rabbitmq_path }}/rabbitmq.conf", mode: '0644'}
     - {'src': 'erlang.cookie.j2', 'dest': "{{ rabbitmq_path }}/.erlang.cookie", mode: '0600'}
+  notify: docker restart
