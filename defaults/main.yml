@@ -31,7 +31,8 @@ rabbitmq_config:
     keyfile: /etc/ssl/user/privkey-rabbitmq.pem
     verify: verify_peer
     fail_if_no_peer_cert: 'false'
-
+  management_agent:
+    disable_metrics_collector: 'false'
 # Specify here if it will be a standalone server or being a part of cluster
 # possible values: standalone, cluster
 rabbitmq_setup: standalone
