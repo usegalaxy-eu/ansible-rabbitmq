@@ -14,5 +14,5 @@ cluster_formation.peer_discovery_backend = classic_config
 cluster_formation.classic_config.nodes.{{ loop.index }} = {{ member }}
 {% endfor %}
 {% endif %}
-management_agent.disable_metrics_collector = {{ rabbitmq_config.management_agent.stats }}
+management_agent.disable_metrics_collector = {{ rabbitmq_config.management_agent.disable_metrics_collector }}
 consumer_timeout = {{ rabbitmq_config.consumer_timeout }}
