@@ -1,10 +1,4 @@
 ---
-- name: collect vhosts
-  community.docker.docker_container_exec:
-    container: "{{ rabbitmq_container.name }}"
-    command: rabbitmqctl list_vhosts
-  register: list_vhosts
-
 - name: collect users
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
@@ -23,7 +17,6 @@
     container: "{{ rabbitmq_container.name }}"
     command: "rabbitmqctl add_vhost {{ item.vhost }}"
   loop: "{{ rabbitmq_users }}"
-  when: "item.vhost not in list_vhosts.stdout"
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Create users
