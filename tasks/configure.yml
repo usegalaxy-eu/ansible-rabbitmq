@@ -26,6 +26,11 @@
   loop: "{{ rabbitmq_users }}"
   when: "item.user not in list_users.stdout"
   ignore_errors: "{{ ansible_check_mode }}"
+  
+  # This should fix the "no user ... found" issue
+- name: Pause for 5 second to give rabbit time for user creation
+  ansible.builtin.pause:
+    seconds: 5
 
 - name: Set permission on users
   community.docker.docker_container_exec:
