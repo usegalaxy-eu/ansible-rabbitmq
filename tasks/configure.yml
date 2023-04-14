@@ -1,50 +1,47 @@
 ---
-- name: collect users
+- name: Check if user is OK
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
-    command: rabbitmqctl list_users
-  register: list_users
+    command: 'rabbitmqctl authenticate_user "{{ item.user }}" "{{ item.password }}"'
+  ignore_errors: true
+  register: user_ok
 
-- name: Remove guest user
+- name: Create user if authentication failed
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
-    command: rabbitmqctl delete_user 'guest'
-  when: "'guest' in list_users.stdout"
+    command: 'rabbitmqctl delete_user "{{ item.user }}" "{{ item.password }}"'
   ignore_errors: "{{ ansible_check_mode }}"
+  when: user_ok.rc > 0
 
-- name: Create vhosts
-  community.docker.docker_container_exec:
-    container: "{{ rabbitmq_container.name }}"
-    command: "rabbitmqctl add_vhost {{ item.vhost }}"
-  loop: "{{ rabbitmq_users }}"
-  ignore_errors: "{{ ansible_check_mode }}"
-
-- name: Create users
+- name: Create user if authentication failed
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
     command: 'rabbitmqctl add_user "{{ item.user }}" "{{ item.password }}"'
-  loop: "{{ rabbitmq_users }}"
-  when: "item.user not in list_users.stdout"
   ignore_errors: "{{ ansible_check_mode }}"
-  
-  # This should fix the "no user ... found" issue
-- name: Pause for 5 second to give rabbit time for user creation
-  ansible.builtin.pause:
-    seconds: 5
+  when: user_ok.rc > 0
 
 - name: Set permission on users
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
     command: 'rabbitmqctl set_permissions -p "{{ item.vhost }}" "{{ item.user }}" ".*" ".*" ".*"'
-  loop: "{{ rabbitmq_users }}"
-  when: "item.user not in list_users.stdout"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Remove guest user
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name }}"
+    command: rabbitmqctl delete_user 'guest'
+  ignore_errors: true
+
+- name: Create vhosts
+  community.docker.docker_container_exec:
+    container: "{{ rabbitmq_container.name }}"
+    command: "rabbitmqctl add_vhost {{ item.vhost }}"
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set tags on user
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
     command: 'rabbitmqctl set_user_tags "{{ item.user }}" ""{{ item.tags }}'
-  loop: "{{ rabbitmq_users }}"
   when: "item.tags is defined"
   ignore_errors: "{{ ansible_check_mode }}"
 
