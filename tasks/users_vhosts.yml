@@ -9,7 +9,7 @@
 - name: Create user if authentication failed
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
-    command: 'rabbitmqctl delete_user "{{ item.user }}" "{{ item.password }}"'
+    command: 'rabbitmqctl delete_user "{{ item.user }}"
   ignore_errors: "{{ ansible_check_mode }}"
   when: user_ok.rc > 0
 
