@@ -26,12 +26,6 @@
     command: 'rabbitmqctl set_permissions -p "{{ item.vhost }}" "{{ item.user }}" ".*" ".*" ".*"'
   ignore_errors: "{{ ansible_check_mode }}"
 
-- name: Remove guest user
-  community.docker.docker_container_exec:
-    container: "{{ rabbitmq_container.name }}"
-    command: rabbitmqctl delete_user 'guest'
-  ignore_errors: true
-
 - name: Create vhosts
   community.docker.docker_container_exec:
     container: "{{ rabbitmq_container.name }}"
@@ -45,8 +39,3 @@
   when: "item.tags is defined"
   ignore_errors: "{{ ansible_check_mode }}"
 
-- name: Enable plugins
-  community.docker.docker_container_exec:
-    container: "{{ rabbitmq_container.name }}"
-    command: "rabbitmq-plugins enable {{ item }}"
-  loop: "{{ rabbitmq_plugins }}"
