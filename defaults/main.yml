@@ -54,8 +54,11 @@ rabbitmq_container:
 
 rabbitmq_container_pause: 20
 
+rabbitmq_data_volume: "{{ rabbitmq_path }}/data"
+
 rabbitmq_container_standalone_setup_details:
   volumes:
+    - "{{ rabbitmq_data_volume }}:/var/lib/rabbitmq"
     - "{{ rabbitmq_path }}/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"
     - "{{ rabbitmq_path }}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     - /etc/ssl:/etc/ssl:ro
@@ -66,6 +69,7 @@ rabbitmq_container_standalone_setup_details:
 
 rabbitmq_container_cluster_setup_details:
   volumes:
+    - "{{ rabbitmq_data_volume }}:/var/lib/rabbitmq"
     - "{{ rabbitmq_path }}/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"
     - "{{ rabbitmq_path }}/.erlang.cookie:/var/lib/rabbitmq/.erlang.cookie"
     - /etc/ssl:/etc/ssl:ro
