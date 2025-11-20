@@ -1,3 +1,6 @@
 ---
 - name: docker restart
-  command: docker restart {{ rabbitmq_container.name }}
+  community.docker.docker_compose:
+    project_src: "{{ rabbitmq_path }}"
+    state: present
+    restarted: true

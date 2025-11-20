@@ -27,12 +27,21 @@
     state: directory
     mode: '0755'
 
-- name: Copy templates
+- name: Copy RabbitMQ configuration template
   ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "{{ item.mode }}"
-  loop:
-    - {'src': 'rabbitmq.conf.j2', 'dest': "{{ rabbitmq_path }}/rabbitmq.conf", mode: '0644'}
-    - {'src': 'erlang.cookie.j2', 'dest': "{{ rabbitmq_path }}/.erlang.cookie", mode: '0600'}
+    src: rabbitmq.conf.j2
+    dest: "{{ rabbitmq_path }}/rabbitmq.conf"
+    mode: '0644'
   notify: docker restart
+
+- name: Copy erlang cookie template
+  ansible.builtin.template:
+    src: erlang.cookie.j2
+    dest: "{{ rabbitmq_path }}/.erlang.cookie"
+    mode: '0644'
+  notify: docker restart
+
+- name: Set erlang cookie permissions to be readable by container
+  ansible.builtin.file:
+    path: "{{ rabbitmq_path }}/.erlang.cookie"
+    mode: '0644'
