@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: "{{ rabbitmq_container.image }}"
+    container_name: "{{ rabbitmq_container.name }}"
+    hostname: "{{ rabbitmq_container.hostname }}"
+    restart: always
+    environment:
+{% if rabbitmq_container_env %}
+{% for key, value in rabbitmq_container_env.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+{% else %}
+      # No additional environment variables for standalone setup
+      RABBITMQ_USE_LONGNAME: "false"
+{% endif %}
+    volumes:
+{% for volume in rabbitmq_container_volumes %}
+      - "{{ volume }}"
+{% endfor %}
+    ports:
+{% for port in rabbitmq_container_ports %}
+      - "{{ port }}"
+{% endfor %}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - rabbitmq-network
+
+networks:
+  rabbitmq-network:
+    driver: bridge

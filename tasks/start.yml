@@ -13,16 +13,19 @@
     rabbitmq_container_env: "{{ rabbitmq_container_cluster_setup_details.env|default({}, true) }}"
   when: rabbitmq_setup == "cluster"
 
-- name: Start a rabbitmq container
-  community.docker.docker_container:
-    name: "{{ rabbitmq_container.name }}"
-    hostname: "{{ rabbitmq_container.hostname }}"
-    image: "{{ rabbitmq_container.image }}"
-    state: started
-    restart_policy: always
-    volumes: "{{ rabbitmq_container_volumes }}"
-    ports: "{{ rabbitmq_container_ports }}"
-    env: "{{ rabbitmq_container_env }}"
+- name: Copy docker-compose.yml from template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ rabbitmq_path }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start RabbitMQ using Docker Compose
+  community.docker.docker_compose:
+    project_src: "{{ rabbitmq_path }}"
+    files:
+      - docker-compose.yml
+    state: present
+    recreate: smart
 
 - name: Pause for some seconds to give time to the container to come up
   pause:
