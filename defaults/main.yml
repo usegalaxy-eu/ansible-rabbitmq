@@ -80,3 +80,4 @@ rabbitmq_container_cluster_setup_details:
     - 4369:4369
     - 25672:25672
   env: {'RABBITMQ_USE_LONGNAME': 'true'}
+rabbitmq_ulimits: 1024
