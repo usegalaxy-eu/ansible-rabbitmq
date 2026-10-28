@@ -21,6 +21,7 @@ rabbitmq_plugins:
 
 rabbitmq_config:
   consumer_timeout: 3600000 # one hour in milliseconds
+  max_message_size: 134217728 # 128MiB (rabbitmq default for versions 3.8-3.13)
   listeners:
     tcp: none
   ssl_listeners:
